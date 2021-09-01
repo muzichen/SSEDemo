@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="message-body"></div>
+  <button onclick="start()">Start</button>
+  <button onclick="stop()">Stop</button>
+  <script>
+    let eventSource = null;
+    const start = () => {
+      eventSource = new EventSource('tick');
+
+      eventSource.onopen = function(e) {
+        log('Event: open');
+      }
+
+      eventSource.onerror = function(e) {
+        log('Event: error');
+        if (this.readyState === EventSource.CONNECTING) {
+          log('Reconnecting...');
+        } else {
+          log('Error!!!!')
+        }
+      }
+
+      eventSource.onmessage = function(e) {
+        log('Event: message, data: ' + e.data);
+      }
+
+      eventSource.addEventListener('bye', function(e) {
+        log('Event: bye, data: ' + e.data);
+      })
+
+    }
+
+    function log(msg) {
+      const msgBody = document.querySelector('#message-body');
+      msgBody.innerHTML += msg + '<br />';
+    }
+  </script>
+</body>
+</html>
