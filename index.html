@@ -12,6 +12,12 @@
   <button onclick="stop()">Stop</button>
   <script>
     let eventSource = null;
+
+    const stop = () => {
+      eventSource.close();
+      log('Event: close...');
+    }
+
     const start = () => {
       eventSource = new EventSource('tick');
 
